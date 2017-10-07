@@ -4,9 +4,13 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +23,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import android.location.Location;
+import android.location.LocationManager;
+
 
 import com.example.kira.auxiliosocorro.Gillotine.animation.GuillotineAnimation;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity {
     private static final long RIPPLE_DURATION = 250;
@@ -30,6 +38,25 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout root;
 
     private View contentHamburger;
+
+    //pruebas de localizacion
+    private LocationManager locationManager;
+    private Location location;
+    private String latitud="ERROR",longitud="ERROR";
+    private Criteria criteria = new Criteria();
+
+    /*
+
+    LocationManager locationManager = (LocationManager)
+        getSystemService(Context.LOCATION_SERVICE);
+Criteria criteria = new Criteria();
+
+Location location = locationManager.getLastKnownLocation(locationManager
+        .getBestProvider(criteria, false));
+double latitude = location.getLatitude();
+double longitud = location.getLongitude();
+
+     */
 
 
     private Button btnInicio,btnRefugio, btnAcopio,btnSocorro;
@@ -115,24 +142,55 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(sendIntent);*/
 
                     //intento 2
-                    //saber version de android
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
-                        // versiones con android 6.0 o superior
-                        checkSMSStatePermission();
-                        SmsManager sms = SmsManager.getDefault();
+                    //obtener la posicion de la persona
 
-                        sms.sendTextMessage(strPhone, null, strMessage, null, null);
+                    //comprobamos GPS Activado
+                    if(isLocationEnabled()){
+                        //si esta activado hacemos todo para mandar el mensaje
+
+                        //saber version de android
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+                            // versiones con android 6.0 o superior
+
+                            //antes de mandar mensaje obtenemos la posicion
+                            obtenPosicion();//seteamos posicion
+                            mandaPosicion();//mandamos posicion
+
+                            //mandamos mensaje a contactos
+                            checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
+                            SmsManager sms = SmsManager.getDefault();
+
+                            sms.sendTextMessage(strPhone, null, strMessage, null, null);
 
 
-                    } else{
-                        // para versiones anteriores a android 6.0
-                        SmsManager sms = SmsManager.getDefault();
+                        } else{
+                            // para versiones anteriores a android 6.0
 
-                        sms.sendTextMessage(strPhone, null, strMessage, null, null);
+                            //antes de mandar mensaje obtenemos la posicion
+                            obtenPosicion();//seteamos posicion
+                            Toast.makeText(getBaseContext(),latitud,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(),longitud,Toast.LENGTH_SHORT).show();
+                            mandaPosicion();//mandamos posicion
 
+
+
+                            //mandamos mensaje
+                            SmsManager sms = SmsManager.getDefault();
+
+                            sms.sendTextMessage(strPhone, null, strMessage, null, null);
+
+                        }
+
+
+                    }else{//de lo contrario damos una mensaje
+                        Toast.makeText(getBaseContext(),"GPS desactivado",Toast.LENGTH_SHORT).show();
                     }
 
-
+                    /*GoogleApiClient apiClient = new GoogleApiClient.Builder(this)
+                            .enableAutoManage(this, this)
+                            .addConnectionCallbacks(this)
+                            .addApi(Location.API)
+                            .build();*/
 
                     //Toast.makeText(this, "Sent.", Toast.LENGTH_SHORT).show();
 
@@ -157,7 +215,41 @@ public class MainActivity extends AppCompatActivity {
     //obtener la posicion y mandarla a los contactos
     public void obtenPosicion(){
 
+        try{
 
+            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+            latitud =location.getLatitude()+"";
+            longitud = location.getLongitude()+"";
+            /*if(location.getLatitude()+""!=null){
+                latitud =location.getLatitude()+"";
+            }
+            if(location.getLongitude()+""!=null){
+                longitud = location.getLongitude()+"";
+            }*/
+
+
+
+        }catch (SecurityException e){
+
+        }
+
+
+
+    }
+
+    //Mandar posicion
+    public void mandaPosicion(){
+
+
+    }
+
+
+    //saber si se tiene el GPS Activado
+    private boolean isLocationEnabled() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
 

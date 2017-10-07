@@ -13,6 +13,8 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
+import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -70,6 +72,37 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnAlarma;
     private GuillotineAnimation g;
+
+    /*private MediaPlayer player;
+
+
+    public IBinder onBind(Intent intent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+
+    public void onCreate() {
+        Toast.makeText(this, "Servicio Creado", Toast.LENGTH_LONG).show();
+        player = MediaPlayer.create(this, R.raw.water_droplet);
+        player.setLooping(true);
+    }
+
+
+    public void onDestroy() {
+        Toast.makeText(this, "Servicio Detenido", Toast.LENGTH_LONG).show();
+        player.stop();
+    }
+
+
+    public void onStart(Intent intent, int startid) {
+        Toast.makeText(this, "Servicio Iniciado", Toast.LENGTH_LONG).show();
+        player.start();
+    }
+    */
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -265,6 +298,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
 
     }
+
+
+
+
 
     //Mandar posicion
     public void mandaPosicion(){

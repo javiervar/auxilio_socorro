@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
@@ -30,6 +32,10 @@ import android.location.LocationManager;
 import com.example.kira.auxiliosocorro.Gillotine.animation.GuillotineAnimation;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
     private static final long RIPPLE_DURATION = 250;
 
@@ -42,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     //pruebas de localizacion
     private LocationManager locationManager;
     private Location location;
-    private String latitud="ERROR",longitud="ERROR";
+    private String latitud="ERROR",longitud="ERROR",direccion="ERROR";
     private Criteria criteria = new Criteria();
 
     /*
@@ -132,7 +138,8 @@ double longitud = location.getLongitude();
                     //enviar mensaje de prueba
                     String strPhone = "6641375618";
                     //String strPhone = "6641184394";
-                    String strMessage = "esto es una prueba, Llorllie es Gay!!! porque le va al AMERICA D: ";
+                    String strMessage = "Auxilio estoy en problemas, mi direccion es>: \\r\\n\\r\\n"+direccion+
+                            "mi ubicacion es: ";
 
                     //intento uno este no nos sirve XD aun
                     /*Intent sendIntent = new Intent(Intent.ACTION_VIEW);
@@ -177,7 +184,7 @@ double longitud = location.getLongitude();
                             //mandamos mensaje
                             SmsManager sms = SmsManager.getDefault();
 
-                            sms.sendTextMessage(strPhone, null, strMessage, null, null);
+                            sms.sendTextMessage(strPhone, null, strMessage+longitud+","+latitud, null, null);
 
                         }
 
@@ -242,6 +249,24 @@ double longitud = location.getLongitude();
     public void mandaPosicion(){
 
 
+    }
+
+    //obten direccion
+    public void setLocation(Location loc) {
+        //Obtener la direcci—n de la calle a partir de la latitud y la longitud
+        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
+            try {
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> list = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+                if (!list.isEmpty()) {
+                    Address address = list.get(0);
+                    ///messageTextView2.setText("Mi direcci—n es: \n" + address.getAddressLine(0));
+                    direccion=address.getAddressLine(0);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

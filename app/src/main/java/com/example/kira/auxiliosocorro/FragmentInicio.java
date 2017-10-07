@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -69,9 +70,23 @@ public class FragmentInicio extends Fragment {
                 googleMap = mMap;
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+                    Toast.makeText(getContext(),"es android 6",Toast.LENGTH_SHORT).show();
                     // versiones con android 6.0 o superior
-                    if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+                   /* if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {*/
+                    int permissionCheck = ContextCompat.checkSelfPermission(
+                            getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+                    int permissionCheck2 = ContextCompat.checkSelfPermission(
+                            getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+                    if(permissionCheck!= PackageManager.PERMISSION_GRANTED || permissionCheck2!= PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 225);
+                            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 225);
+
+
+                    } else {
+                    // Show rationale and request permission.
+                        Toast.makeText(getContext(),"si obtuve permiso",Toast.LENGTH_SHORT).show();
                         //mMap.setMyLocationEnabled(true);
 
                         googleMap.setMyLocationEnabled(true);
@@ -84,10 +99,7 @@ public class FragmentInicio extends Fragment {
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-
-                    } else {
-                        // Show rationale and request permission.
-                    }
+                        }
 
 
                 } else{

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //pruebas de localizacion
     private LocationManager locationManager;
     private Location location;
-    private String latitud="",longitud="";
+    private String latitud="ERROR",longitud="ERROR";
     private Criteria criteria = new Criteria();
 
     /*
@@ -218,8 +218,17 @@ double longitud = location.getLongitude();
         try{
 
             location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
             latitud =location.getLatitude()+"";
             longitud = location.getLongitude()+"";
+            /*if(location.getLatitude()+""!=null){
+                latitud =location.getLatitude()+"";
+            }
+            if(location.getLongitude()+""!=null){
+                longitud = location.getLongitude()+"";
+            }*/
+
+
 
         }catch (SecurityException e){
 

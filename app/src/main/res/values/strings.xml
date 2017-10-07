@@ -1,4 +1,9 @@
 <resources>
+
+    <string name="feed">FEED</string>
+    <string name="activity">ACTIVITY</string>
+    <string name="configuracion">SETTINGS</string>
+
     <string name="app_name">AuxilioSocorro</string>
 
     <!-- TODO: Remove or change this placeholder text -->

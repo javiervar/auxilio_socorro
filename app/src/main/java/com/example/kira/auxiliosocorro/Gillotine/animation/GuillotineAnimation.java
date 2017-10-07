@@ -33,8 +33,8 @@ public class GuillotineAnimation {
     final private  TimeInterpolator mInterpolator;
     final private  View mActionBarView;
     final private  long mDelay;
-    final private Button btnEstadisticas;
-    final private Button btnRegistros;
+    final private Button btnRefugio,btnInicio;
+
     private boolean isOpening;
     private boolean isClosing;
 
@@ -52,8 +52,8 @@ public class GuillotineAnimation {
         setUpClosingView(builder.closingView);
         this.mOpeningAnimation = buildOpeningAnimation();
         this.mClosingAnimation = buildClosingAnimation();
-        this.btnEstadisticas=builder.btn1;
-        this.btnRegistros=builder.btn2;
+        this.btnRefugio=builder.btn1;
+        this.btnInicio=builder.btn2;
 
         if (builder.isClosedOnStart) {
             mGuillotineView.setRotation(GUILLOTINE_CLOSED_ANGLE);
@@ -80,11 +80,9 @@ public class GuillotineAnimation {
 
     }
 
-    public Button getBtnEstadisticas(){
-        return btnEstadisticas;
-    }
-    public Button getBtnRegistros(){
-        return btnRegistros;
+    public Button getBtnInicio(){return btnInicio;}
+    public Button getBtnRefugio(){
+        return btnRefugio;
     }
     private void setUpOpeningView(final View openingView) {
 

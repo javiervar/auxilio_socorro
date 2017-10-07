@@ -8,19 +8,20 @@
 
 
     <!--Boton de socorro-->
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/boton8"
-        android:layout_gravity="bottom"
 
-        />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/soyelmapa"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/boton8"
+        android:layout_gravity="bottom|right"
 
+        />
 
 </FrameLayout>

@@ -19,6 +19,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by kira on 6/10/17.
@@ -76,5 +79,13 @@ public class FragmentInicio extends Fragment {
 
         return view;
     }
+
+    public List<Ubicacion> getUbicaciones(){
+        List<Ubicacion> ubicacions=new ArrayList<Ubicacion>();
+
+        return ubicacions;
+    }
+
+
 
 }

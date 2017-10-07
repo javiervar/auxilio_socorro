@@ -11,7 +11,7 @@ import android.widget.SimpleCursorAdapter;
  */
 
 public class FragmentContactos extends AppCompatActivity{
-    private SimpleCursorAdapter adapter;
+    public SimpleCursorAdapter adapter;
 
 @Override
     protected void onCreate(Bundle savedInstanceState){

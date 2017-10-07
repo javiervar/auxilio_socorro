@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private boolean sigue=false;//saber si seguir con la alarma
 
 
-    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnAlarma;
+    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnAlarma,btnMensaje;
+
     private GuillotineAnimation g;
 
     /*private MediaPlayer player;
@@ -129,9 +130,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         btnInicio =g.getBtnInicio();
         btnRefugio=g.getBtnRefugio();
         btnAcopio=g.getBtnAcopio();
+        btnMensaje=g.getBtnMensaje();
         btnInicio.setOnClickListener(eventosMenu);
         btnRefugio.setOnClickListener(eventosMenu);
         btnAcopio.setOnClickListener(eventosMenu);
+        btnMensaje.setOnClickListener(eventosMenu);
         //agregando boton prueba mensaje socorro
         btnSocorro=g.getBtnSocorro();
         btnSocorro.setOnClickListener(eventosMenu);
@@ -149,7 +152,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
+
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
+
                     loadFragment(new FragmentInicio());
                     break;
                 case R.id.btn_refugio:
@@ -157,7 +164,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
+
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
+
                     loadFragment(new FragmentRefugio());
                     break;
                 case R.id.btn_acopio:
@@ -165,16 +176,24 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
+
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
+
                     loadFragment(new FragmentAcopio());
                     break;
                 case R.id.btn_socorro://mandar mensaje de axilio
                     //btnSocorro.setBackgroundResource(R.drawable.ripple);
-                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnSocorro.setBackgroundResource(R.drawable.ripple);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
+
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
+
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
+
                     //loadFragment(new FragmentAcopio());
                     Toast.makeText(getBaseContext(), "SOCORRO!!!", Toast.LENGTH_SHORT).show();
                     //enviar mensaje de prueba
@@ -186,6 +205,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     //obtener la posicion de la persona
 
                     //comprobamos GPS Activado
+
+                    break;
+                case R.id.btn_mensaje://mandar mensaje de axilio
+                    //btnSocorro.setBackgroundResource(R.drawable.ripple);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAcopio.setBackgroundColor(Color.TRANSPARENT);
+                    btnRefugio.setBackgroundColor(Color.TRANSPARENT);
+                    btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnMensaje.setBackgroundResource(R.drawable.ripple);
+                    loadFragment(new FragmentMensaje());
+
                     if(isLocationEnabled()){
                         //si esta activado hacemos todo para mandar el mensaje
 
@@ -260,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
 
                     //loadFragment(new FragmentAcopio());
+
 
 
 

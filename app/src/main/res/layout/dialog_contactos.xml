@@ -4,12 +4,19 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="20dp"
-    android:minWidth="300dp">
+    android:minWidth="300dp"
+    android:background="#fff" >
 
     <ListView
         android:id="@+id/dialoglist"
         android:layout_width="fill_parent"
-        android:layout_height="400dp" />
+        android:layout_height="400dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:fadeScrollbars="true"
+        android:visibility="visible"
+        />
    <GridLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content">

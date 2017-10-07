@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         for (int i = 0; i < jsonArray.size(); i++) {
                             JsonObject object = jsonArray.get(i).getAsJsonObject();
                             int tipoContacto=object.get("tipoContacto").getAsInt();
-                            String Mensaje = object.get("mensaje").getAsString()+"estoy en : "+direccion+
+                            String Mensaje = object.get("mensaje").getAsString()+" estoy en : "+direccion+
                                     "y mi localizacion es: "+latitud+","+longitud;
                             String telefono=object.get("telefono").getAsString();
 

@@ -59,7 +59,7 @@ double longitud = location.getLongitude();
      */
 
 
-    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro;
+    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnMensaje;
     private GuillotineAnimation g;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +87,11 @@ double longitud = location.getLongitude();
         btnInicio =g.getBtnInicio();
         btnRefugio=g.getBtnRefugio();
         btnAcopio=g.getBtnAcopio();
+        btnMensaje=g.getBtnMensaje();
         btnInicio.setOnClickListener(eventosMenu);
         btnRefugio.setOnClickListener(eventosMenu);
         btnAcopio.setOnClickListener(eventosMenu);
+        btnMensaje.setOnClickListener(eventosMenu);
         //agregando boton prueba mensaje socorro
         btnSocorro=g.getBtnSocorro();
         btnSocorro.setOnClickListener(eventosMenu);
@@ -105,6 +107,7 @@ double longitud = location.getLongitude();
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentInicio());
                     break;
                 case R.id.btn_refugio:
@@ -112,6 +115,7 @@ double longitud = location.getLongitude();
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentRefugio());
                     break;
                 case R.id.btn_acopio:
@@ -119,14 +123,16 @@ double longitud = location.getLongitude();
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentAcopio());
                     break;
                 case R.id.btn_socorro://mandar mensaje de axilio
                     //btnSocorro.setBackgroundResource(R.drawable.ripple);
-                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnSocorro.setBackgroundResource(R.drawable.ripple);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnMensaje.setBackgroundColor(Color.TRANSPARENT);
                     //loadFragment(new FragmentAcopio());
                     Toast.makeText(getBaseContext(), "SOCORRO!!! YA VALIO ESTO", Toast.LENGTH_SHORT).show();
                     //enviar mensaje de prueba
@@ -145,55 +151,15 @@ double longitud = location.getLongitude();
                     //obtener la posicion de la persona
 
                     //comprobamos GPS Activado
-                    if(isLocationEnabled()){
-                        //si esta activado hacemos todo para mandar el mensaje
-
-                        //saber version de android
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
-                            // versiones con android 6.0 o superior
-
-                            //antes de mandar mensaje obtenemos la posicion
-                            obtenPosicion();//seteamos posicion
-                            mandaPosicion();//mandamos posicion
-
-                            //mandamos mensaje a contactos
-                            checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
-                            SmsManager sms = SmsManager.getDefault();
-
-                            sms.sendTextMessage(strPhone, null, strMessage, null, null);
-
-
-                        } else{
-                            // para versiones anteriores a android 6.0
-
-                            //antes de mandar mensaje obtenemos la posicion
-                            obtenPosicion();//seteamos posicion
-                            Toast.makeText(getBaseContext(),latitud,Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getBaseContext(),longitud,Toast.LENGTH_SHORT).show();
-                            mandaPosicion();//mandamos posicion
-
-
-
-                            //mandamos mensaje
-                            SmsManager sms = SmsManager.getDefault();
-
-                            sms.sendTextMessage(strPhone, null, strMessage, null, null);
-
-                        }
-
-
-                    }else{//de lo contrario damos una mensaje
-                        Toast.makeText(getBaseContext(),"GPS desactivado",Toast.LENGTH_SHORT).show();
-                    }
-
-                    /*GoogleApiClient apiClient = new GoogleApiClient.Builder(this)
-                            .enableAutoManage(this, this)
-                            .addConnectionCallbacks(this)
-                            .addApi(Location.API)
-                            .build();*/
-
-                    //Toast.makeText(this, "Sent.", Toast.LENGTH_SHORT).show();
-
+                    break;
+                case R.id.btn_mensaje://mandar mensaje de axilio
+                    //btnSocorro.setBackgroundResource(R.drawable.ripple);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAcopio.setBackgroundColor(Color.TRANSPARENT);
+                    btnRefugio.setBackgroundColor(Color.TRANSPARENT);
+                    btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnMensaje.setBackgroundResource(R.drawable.ripple);
+                    loadFragment(new FragmentMensaje());
                     break;
             }
             g.close();

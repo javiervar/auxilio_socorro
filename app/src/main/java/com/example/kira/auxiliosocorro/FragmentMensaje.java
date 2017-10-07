@@ -1,7 +1,9 @@
 package com.example.kira.auxiliosocorro;
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -29,15 +31,16 @@ import java.util.ArrayList;
  * Created by jose_ on 07/10/2017.
  */
 
-public class FragmentMensaje extends Fragment {
+public class FragmentMensaje extends Fragment{
     private ImageButton contacto;
     public static FragmentMensaje newInstance() {
         return new FragmentMensaje();
     }
 
-
+LayoutInflater inflater;
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragmento_mensaje, container, false);
+        this.inflater = inflater;
         contacto = (ImageButton) view.findViewById(R.id.btnimg);
         contacto.setOnClickListener(eventosMenu);
         return view;
@@ -48,7 +51,13 @@ public class FragmentMensaje extends Fragment {
         public void onClick(final View v) {
             switch(v.getId()) {
                 case R.id.btnimg:
+                    AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
+                    View mView = inflater.inflate(R.layout.dialog_contactos, null);
+                    final ListView listaContactos = (ListView) mView.findViewById(R.id.dialoglist);
                     
+                    final Button botonAceptar = (Button) mView.findViewById(R.id.buttonaceptar);
+                    final Button botonVolver = (Button) mView.findViewById(R.id.buttonvolver);
+                    alert.show();
                     break;
 
             }

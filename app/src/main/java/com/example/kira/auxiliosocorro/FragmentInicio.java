@@ -68,16 +68,15 @@ public class FragmentInicio extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        /*ImageView elBoton=(ImageView)getView().findViewById(R.id.elBoton);
+        final View view = inflater.inflate(R.layout.fragmento_inicio, container, false);
+        ImageView elBoton=(ImageView)view.findViewById(R.id.elBoton);
         elBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(),"es android 6",Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
 
-
-        final View view = inflater.inflate(R.layout.fragmento_inicio, container, false);
         mMapView = (MapView) view.findViewById(R.id.soyelmapa);
         mMapView.onCreate(savedInstanceState);
         getUbicaciones(view.getContext());

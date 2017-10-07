@@ -15,6 +15,7 @@ package="com.example.kira.auxiliosocorro">
     <uses-permission android:name="android.permission.RECEIVE_SMS"/><!--recibir mensajes-->
 
     <uses-permission android:name="android.permission.READ_CONTACTS" /><!--acceder a los contactos-->
+    <uses-permission android:name="com.tp.lib.tp.permission.MAPS_RECEIVE" />
 
     <!--uses-permission android:name="android.permission." /-->
 

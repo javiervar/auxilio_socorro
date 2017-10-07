@@ -54,7 +54,7 @@ LayoutInflater inflater;
                     AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
                     View mView = inflater.inflate(R.layout.dialog_contactos, null);
                     final ListView listaContactos = (ListView) mView.findViewById(R.id.dialoglist);
-                    
+
                     final Button botonAceptar = (Button) mView.findViewById(R.id.buttonaceptar);
                     final Button botonVolver = (Button) mView.findViewById(R.id.buttonvolver);
                     alert.show();

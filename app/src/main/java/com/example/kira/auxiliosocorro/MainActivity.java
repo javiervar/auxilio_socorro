@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
                     //loadFragment(new FragmentAcopio());
-                    Toast.makeText(getBaseContext(), "SOCORRO!!! YA VALIO ESTO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "SOCORRO!!!", Toast.LENGTH_SHORT).show();
                     //enviar mensaje de prueba
                     String strPhone = "6641375618";
                     //String strPhone = "6641184394";
@@ -275,10 +275,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     //mandar mensajes
     public void mandaMensajes(Context context){
         Log.i("Mensaje", "Mandare SMS.");
-        /*JsonObject json = new JsonObject();
-        json.addProperty("api", "0ct0d3v5");
-        json.addProperty("operacion", "4");
-        json.addProperty("idUsuario", "1");*/
 
         Ion.with(context)
                 .load("https://auxiliosocorro.octodevs.com/Consultas")
@@ -300,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         for (int i = 0; i < jsonArray.size(); i++) {
                             JsonObject object = jsonArray.get(i).getAsJsonObject();
                             int tipoContacto=object.get("tipoContacto").getAsInt();
-                            String Mensaje = object.get("mensaje").getAsString()+"estoy en : "+direccion+
+                            String Mensaje = object.get("mensaje").getAsString()+" estoy en : "+direccion+
                                     "y mi localizacion es: "+latitud+","+longitud;
                             String telefono=object.get("telefono").getAsString();
 

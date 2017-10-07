@@ -2,9 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+<<<<<<< HEAD
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Selecciona contactos de emergencia"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"/>
+
+    <ImageButton
+        android:id="@+id/btnimg"
+        android:src="@drawable/boton9"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escribe un mensaje para tus contactos de emergencia"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:text="Ingresa aqui tu texto" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar mensaje"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
+=======
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="Escribe un mensaje para tus contactos de emergencia"
-   />
+/>
+>>>>>>> dbe68fd971558d8b311e53662f2155c746931927
 </LinearLayout>

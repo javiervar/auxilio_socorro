@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -20,6 +23,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +50,7 @@ public class FragmentInicio extends Fragment {
         final View view = inflater.inflate(R.layout.fragmento_inicio, container, false);
         mMapView = (MapView) view.findViewById(R.id.soyelmapa);
         mMapView.onCreate(savedInstanceState);
-
+        getUbicaciones();
         mMapView.onResume(); // needed to get the map to display immediately
 
         try {
@@ -127,6 +135,24 @@ public class FragmentInicio extends Fragment {
 
     public List<Ubicacion> getUbicaciones(){
         List<Ubicacion> ubicacions=new ArrayList<Ubicacion>();
+        AndroidNetworking.get("https://auxiliosocorro.octodevs.com/Consultas")
+                .addPathParameter("api", "0ct0d3v5")
+                .addQueryParameter("operacion", "2")
+                .addQueryParameter("tipoLugar", "2")
+                .addHeaders("token", "1234")
+                .setTag("test")
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        System.out.println(response);
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+                        System.out.println(error);
+                    }
+                });
 
         return ubicacions;
     }

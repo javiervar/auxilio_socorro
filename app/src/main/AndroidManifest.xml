@@ -9,10 +9,10 @@
     <uses-permission android:name="android.permission.INTERNET" /><!--conectarse a internet-->
     <uses-permission android:name="android.permission.VIBRATE" /><!--vibracion del dispositivo-->
     <uses-permission android:name="android.permission.SEND_SMS"/><!--enviar mensajes-->
-
     <uses-permission android:name="android.permission.WRITE_SMS"/><!--escribir mensajes-->
     <uses-permission android:name="android.permission.READ_SMS"/><!--leer mensajes-->
     <uses-permission android:name="android.permission.RECEIVE_SMS"/><!--recibir mensajes-->
+    <uses-permission android:name="android.permission.READ_CONTACTS" /><!--acceder a los contactos-->
 
     <application
         android:allowBackup="true"

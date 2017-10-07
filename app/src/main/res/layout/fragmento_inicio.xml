@@ -69,7 +69,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="10dp"
-        app:srcCompat="@drawable/boton8"
+        app:srcCompat="@drawable/boton10"
         android:layout_gravity="bottom|left"
 
 

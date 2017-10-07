@@ -4,12 +4,15 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +42,11 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.Inflater;
 
@@ -59,6 +64,7 @@ public class FragmentInicio extends Fragment {
     private Location location;
     private Criteria criteria = new Criteria();
     JsonObject jsonLugares=new JsonObject();
+    String longitud="",latitud="",direccion="";
     public static FragmentInicio newInstance() {
         return new FragmentInicio();
     }
@@ -73,7 +79,8 @@ public class FragmentInicio extends Fragment {
         elBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"es android 6",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Solicitando Ayuda...",Toast.LENGTH_SHORT).show();
+                pideAyuda();
             }
         });
 
@@ -254,15 +261,195 @@ public class FragmentInicio extends Fragment {
         return view;
     }
 
-    public void mandaMensajes(){
-        Toast.makeText(getActivity(),"presionado",Toast.LENGTH_SHORT).show();
+    public void pideAyuda(){
+        //Toast.makeText(getActivity(),"presionado",Toast.LENGTH_SHORT).show();
+        //comprobamos GPS Activado
+        if(isLocationEnabled(getActivity())){
+            //si esta activado hacemos todo para mandar el mensaje
+
+            //saber version de android
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+                // versiones con android 6.0 o superior
+
+                //antes de mandar mensaje obtenemos la posicion
+                obtenPosicion();//seteamos posicion
+                mandaPosicion();//mandamos posicion
+                setLocation(location);//obtener direccion
+                checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
+                //mandaMensajes(getActivity());
+                String tel1="6641184394",tel2="6641621017",tel3="6647532504";
+
+                String strMessage = "Auxilio estoy en Peligro, estoy en : \r\n\r\n"+direccion+
+                                    "mi ubicacion es: "+latitud+","+longitud;
+                //mandamos mensaje a contactos
+                checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(tel1, null, strMessage, null, null);
+                SmsManager sms2 = SmsManager.getDefault();
+                sms2.sendTextMessage(tel2, null, strMessage, null, null);
+                SmsManager sms3 = SmsManager.getDefault();
+                sms3.sendTextMessage(tel3, null, strMessage, null, null);
+
+
+            } else{
+                // para versiones anteriores a android 6.0
+
+                //antes de mandar mensaje obtenemos la posicion
+                obtenPosicion();//seteamos posicion
+                Toast.makeText(getActivity(),latitud,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),longitud,Toast.LENGTH_SHORT).show();
+
+                //antes de mandar mensaje obtenemos la posicion
+                //obtenPosicion();//seteamos posicion
+                mandaPosicion();//mandamos posicion
+                setLocation(location);//obtener direccion
+                mandaMensajes(getActivity());
+
+                           /* strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
+                                    "mi ubicacion es: ";
+
+
+                            //mandamos mensaje
+
+                            SmsManager sms = SmsManager.getDefault();
+
+                            sms.sendTextMessage(strPhone, null, strMessage+latitud+","+longitud, null, null);*/
+
+            }
+
+
+        }else{//de lo contrario damos una mensaje
+            Toast.makeText(getActivity(),"GPS desactivado",Toast.LENGTH_SHORT).show();
+        }
+
 
     }
+
+
+
+    //obtener los permisos necesarios para android 6 en adelante
+    public void checkSMSStatePermission() {
+        int permissionCheck = ContextCompat.checkSelfPermission(
+                getActivity(), Manifest.permission.SEND_SMS);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para enviar SMS.");
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, 225);
+        } else {
+            Log.i("Mensaje", "Se tiene permiso para enviar SMS!");
+        }
+    }
+
+    //obtener la posicion y mandarla a los contactos
+    public void obtenPosicion(){
+
+        try{
+
+            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+            latitud =location.getLatitude()+"";
+            longitud = location.getLongitude()+"";
+
+        }catch (SecurityException e){
+
+        }
+
+
+
+    }
+
+    //Mandar posicion
+    public void mandaPosicion(){
+
+
+    }
+
+    //mandar mensajes
+    public void mandaMensajes(Context context){
+        Log.i("Mensaje", "Mandare SMS.");
+
+        Ion.with(context)
+                .load("https://auxiliosocorro.octodevs.com/Consultas")
+                .setBodyParameter("api", "0ct0d3v5")
+                .setBodyParameter("operacion", "4")
+                .setBodyParameter("usuarioId", "1")
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        setLista(result);
+                        Log.i("JSON", result+"");
+                        JsonArray listaContactos = result.getAsJsonArray("listaContactos");
+                        Log.i("ListaContactos", listaContactos+"");
+                        // do stuff with the result or error
+                        JsonArray jsonArray = result.getAsJsonArray("listaContactos");
+                        Log.i("jsonArray", jsonArray+"");
+
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject object = jsonArray.get(i).getAsJsonObject();
+                            int tipoContacto=object.get("tipoContacto").getAsInt();
+                            String Mensaje = object.get("mensaje").getAsString()+" estoy en : "+direccion+
+                                    "y mi localizacion es: "+latitud+","+longitud;
+                            String telefono=object.get("telefono").getAsString();
+
+                            /*if (tipoContacto==1){
+                                bitmapDescriptor
+                                        = BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_RED);
+                            }else{
+                                bitmapDescriptor
+                                        = BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_RED);
+                            }*/
+                            //mandamos mensaje a contactos
+
+                            SmsManager sms = SmsManager.getDefault();
+
+                            sms.sendTextMessage(telefono, null,Mensaje, null, null);
+
+
+                        }
+
+
+                    }
+                });
+    }
+
+
+
+
+    //obten direccion
+    public void setLocation(Location loc) {
+        //Obtener la direcci—n de la calle a partir de la latitud y la longitud
+        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
+            try {
+                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> list = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+                if (!list.isEmpty()) {
+                    Address address = list.get(0);
+                    ///messageTextView2.setText("Mi direcci—n es: \n" + address.getAddressLine(0));
+                    direccion=address.getAddressLine(0);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    //saber si se tiene el GPS Activado
+    /*private boolean isLocationEnabled() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }*/
+
+
 
 
     public void setLista(JsonObject result){
         jsonLugares=result;
     }
+
     private boolean isLocationEnabled(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||

@@ -16,6 +16,8 @@ package="com.example.kira.auxiliosocorro">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" /><!--acceder a los contactos-->
 
+    <!--uses-permission android:name="android.permission." /-->
+
 
     <application
         android:allowBackup="true"
@@ -25,8 +27,13 @@ package="com.example.kira.auxiliosocorro">
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--
+        android:name="com.google.android.geo.API_KEY"
+        android:name="com.google.android.maps.V2.API_KEY"
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <activity android:name=".MainActivity">
             <intent-filter>

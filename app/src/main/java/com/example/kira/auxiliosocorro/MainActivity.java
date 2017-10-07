@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private String latitud="ERROR",longitud="ERROR",direccion="ERROR";
     private Criteria criteria = new Criteria();
     private TextToSpeech textToSpeech;//pasar texto a voz
+    private boolean sigue=true;//saber si seguir con la alarma
 
 
     private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnAlarma;
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             //mandamos mensaje
                             SmsManager sms = SmsManager.getDefault();
 
-                            sms.sendTextMessage(strPhone, null, strMessage+longitud+","+latitud, null, null);
+                            sms.sendTextMessage(strPhone, null, strMessage+latitud+","+longitud, null, null);
 
                         }
 

@@ -103,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
                     //loadFragment(new FragmentAcopio());
                     Toast.makeText(getBaseContext(), "SOCORRO!!! YA VALIO ESTO", Toast.LENGTH_SHORT).show();
                     //enviar mensaje de prueba
-                    //String strPhone = "6641375618";
-                    String strPhone = "6641184394";
-                    String strMessage = "esto es una prueba";
+                    String strPhone = "6641375618";
+                    //String strPhone = "6641184394";
+                    String strMessage = "esto es una prueba, Llorllie es Gay!!! porque le va al AMERICA D: ";
 
                     //intento uno este no nos sirve XD aun
                     /*Intent sendIntent = new Intent(Intent.ACTION_VIEW);
@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    //obtener los permisos necesarios para android 6 en adelante
     public void checkSMSStatePermission() {
         int permissionCheck = ContextCompat.checkSelfPermission(
                 this, Manifest.permission.SEND_SMS);
@@ -152,6 +153,14 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Mensaje", "Se tiene permiso para enviar SMS!");
         }
     }
+
+    //obtener la posicion y mandarla a los contactos
+    public void obtenPosicion(){
+
+
+    }
+
+    
 
     public void loadFragment(Fragment fragment) {
 

@@ -33,7 +33,7 @@ public class GuillotineAnimation {
     final private  TimeInterpolator mInterpolator;
     final private  View mActionBarView;
     final private  long mDelay;
-    final private Button btnRefugio,btnInicio;
+    final private Button btnRefugio,btnInicio, btnAcopio;
 
     private boolean isOpening;
     private boolean isClosing;
@@ -52,8 +52,9 @@ public class GuillotineAnimation {
         setUpClosingView(builder.closingView);
         this.mOpeningAnimation = buildOpeningAnimation();
         this.mClosingAnimation = buildClosingAnimation();
-        this.btnRefugio=builder.btn1;
-        this.btnInicio=builder.btn2;
+        this.btnRefugio=builder.btn2;
+        this.btnInicio=builder.btn1;
+        this.btnAcopio=builder.btn3;
 
         if (builder.isClosedOnStart) {
             mGuillotineView.setRotation(GUILLOTINE_CLOSED_ANGLE);
@@ -84,6 +85,7 @@ public class GuillotineAnimation {
     public Button getBtnRefugio(){
         return btnRefugio;
     }
+    public Button getBtnAcopio() {return btnAcopio;}
     private void setUpOpeningView(final View openingView) {
 
         if (mActionBarView != null) {
@@ -237,6 +239,7 @@ public class GuillotineAnimation {
             this.closingView = closingView;
             this.btn1=(Button) guillotineView.findViewById(R.id.btn_inicio);
             this.btn2=(Button)guillotineView.findViewById(R.id.btn_refugio);
+            this.btn3= (Button)guillotineView.findViewById(R.id.btn_acopio);
 
         }
 

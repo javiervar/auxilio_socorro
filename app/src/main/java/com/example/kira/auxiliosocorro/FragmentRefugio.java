@@ -17,7 +17,7 @@ public class FragmentRefugio  extends Fragment {
 
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragmento_inicio, container, false);
+        final View view = inflater.inflate(R.layout.fragmento_refugio, container, false);
         return view;
     }
 

@@ -23,6 +23,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -117,12 +119,23 @@ public class FragmentInicio extends Fragment {
 
                                         for (int i = 0; i < jsonArray.size(); i++) {
                                             JsonObject object = jsonArray.get(i).getAsJsonObject();
+                                            int tipoLugar=object.get("tipoLugar").getAsInt();
                                             String lat = object.get("latitud").getAsString();
                                             String lon=object.get("longitud").getAsString();
                                             String nombre=object.get("per_razon_social").getAsString();
-                                            System.out.println(nombre);
+                                            BitmapDescriptor bitmapDescriptor;
+                                            if (tipoLugar==1){
+                                                bitmapDescriptor
+                                                        = BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_RED);
+                                            }else{
+                                                bitmapDescriptor
+                                                        = BitmapDescriptorFactory.defaultMarker(
+                                                        BitmapDescriptorFactory.HUE_RED);
+                                            }
+
                                             LatLng lugar = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
-                                            googleMap.addMarker(new MarkerOptions().position(lugar).title(nombre).snippet("Marker Description"));
+                                            googleMap.addMarker(new MarkerOptions().position(lugar).title(nombre).snippet(tipoLugar==2?"REFUGIO":"CENTRO DE ACOPIO"));
 
                                         }
                                         // do stuff with the result or error
@@ -155,23 +168,35 @@ public class FragmentInicio extends Fragment {
                     Ion.with(view.getContext())
                             .load("https://auxiliosocorro.octodevs.com/Consultas")
                             .setBodyParameter("api", "0ct0d3v5")
-                            .setBodyParameter("operacion", "2")
-                            .setBodyParameter("tipoLugar", "2")
+                            .setBodyParameter("operacion", "6")
+
                             .asJsonObject()
                             .setCallback(new FutureCallback<JsonObject>() {
                                 @Override
                                 public void onCompleted(Exception e, JsonObject result) {
                                     setLista(result);
                                     JsonArray jsonArray = result.getAsJsonArray("listaLugares");
+                                    System.out.println(jsonArray);
 
                                     for (int i = 0; i < jsonArray.size(); i++) {
                                         JsonObject object = jsonArray.get(i).getAsJsonObject();
+                                        int tipoLugar=object.get("tipoLugar").getAsInt();
                                         String lat = object.get("latitud").getAsString();
                                         String lon=object.get("longitud").getAsString();
                                         String nombre=object.get("per_razon_social").getAsString();
-                                        System.out.println(nombre);
+                                        BitmapDescriptor bitmapDescriptor;
+                                        if (tipoLugar==1){
+                                            bitmapDescriptor
+                                                    = BitmapDescriptorFactory.defaultMarker(
+                                                    BitmapDescriptorFactory.HUE_GREEN);
+                                        }else{
+                                            bitmapDescriptor
+                                                    = BitmapDescriptorFactory.defaultMarker(
+                                                    BitmapDescriptorFactory.HUE_RED);
+                                        }
+
                                         LatLng lugar = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
-                                        googleMap.addMarker(new MarkerOptions().position(lugar).title(nombre).snippet("Marker Description"));
+                                        googleMap.addMarker(new MarkerOptions().icon(bitmapDescriptor).position(lugar).title(nombre).snippet(tipoLugar==2?"REFUGIO":"CENTRO DE ACOPIO"));
 
                                     }
                                     // do stuff with the result or error

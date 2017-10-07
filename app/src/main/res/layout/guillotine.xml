@@ -133,7 +133,7 @@
             android:layout_gravity="center|center_horizontal"
             android:background="@android:color/transparent"
             android:fontFamily="monospace"
-            android:text="SOCORRO!!!"
+            android:text="Avisar de mi Estado"
             android:textAlignment="center"
             android:textColor="#fff"
             android:textSize="25sp" />

@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">ContAPP</string>
-    <string name="registros">REGISTROS</string>
+
     <string name="feed">FEED</string>
     <string name="activity">ACTIVITY</string>
     <string name="configuracion">SETTINGS</string>
-    <string name="texto_modal">SELECCIONA EL TIPO DE REGISTRO</string>
+
+    <string name="app_name">AuxilioSocorro</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

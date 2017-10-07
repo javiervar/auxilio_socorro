@@ -100,6 +100,25 @@
             android:textAlignment="center"
             android:textColor="#fff"
             android:textSize="25sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <Button
+            android:id="@+id/btn_socorro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal"
+            android:background="@android:color/transparent"
+            android:fontFamily="monospace"
+            android:text="SOCORRO!!!"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textSize="25sp" />
+
     </LinearLayout>
 
 

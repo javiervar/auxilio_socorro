@@ -1,16 +1,24 @@
 package com.example.kira.auxiliosocorro;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.kira.auxiliosocorro.Gillotine.animation.GuillotineAnimation;
 
@@ -24,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private View contentHamburger;
 
 
-    private Button btnInicio,btnRefugio, btnAcopio;
+    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro;
     private GuillotineAnimation g;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         btnInicio.setOnClickListener(eventosMenu);
         btnRefugio.setOnClickListener(eventosMenu);
         btnAcopio.setOnClickListener(eventosMenu);
+        //agregando boton prueba mensaje socorro
+        btnSocorro=g.getBtnSocorro();
+        btnSocorro.setOnClickListener(eventosMenu);
 
     }
 
@@ -66,24 +77,81 @@ public class MainActivity extends AppCompatActivity {
                     btnInicio.setBackgroundResource(R.drawable.ripple);
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentInicio());
                     break;
                 case R.id.btn_refugio:
                     btnRefugio.setBackgroundResource(R.drawable.ripple);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentRefugio());
                     break;
                 case R.id.btn_acopio:
                     btnAcopio.setBackgroundResource(R.drawable.ripple);
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentAcopio());
+                    break;
+                case R.id.btn_socorro://mandar mensaje de axilio
+                    //btnSocorro.setBackgroundResource(R.drawable.ripple);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAcopio.setBackgroundColor(Color.TRANSPARENT);
+                    btnRefugio.setBackgroundColor(Color.TRANSPARENT);
+                    btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    //loadFragment(new FragmentAcopio());
+                    Toast.makeText(getBaseContext(), "SOCORRO!!! YA VALIO ESTO", Toast.LENGTH_SHORT).show();
+                    //enviar mensaje de prueba
+                    //String strPhone = "6641375618";
+                    String strPhone = "6641184394";
+                    String strMessage = "esto es una prueba";
+
+                    //intento uno este no nos sirve XD aun
+                    /*Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+                    sendIntent.setType("vnd.android-dir/mms-sms");
+                    sendIntent.putExtra("address", strPhone);
+                    sendIntent.putExtra("sms_body", strMessage);
+                    startActivity(sendIntent);*/
+
+                    //intento 2
+                    //saber version de android
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+                        // versiones con android 6.0 o superior
+                        checkSMSStatePermission();
+                        SmsManager sms = SmsManager.getDefault();
+
+                        sms.sendTextMessage(strPhone, null, strMessage, null, null);
+
+
+                    } else{
+                        // para versiones anteriores a android 6.0
+                        SmsManager sms = SmsManager.getDefault();
+
+                        sms.sendTextMessage(strPhone, null, strMessage, null, null);
+
+                    }
+
+
+
+                    //Toast.makeText(this, "Sent.", Toast.LENGTH_SHORT).show();
+
                     break;
             }
             g.close();
         }
     };
+
+    public void checkSMSStatePermission() {
+        int permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.SEND_SMS);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para enviar SMS.");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 225);
+        } else {
+            Log.i("Mensaje", "Se tiene permiso para enviar SMS!");
+        }
+    }
 
     public void loadFragment(Fragment fragment) {
 

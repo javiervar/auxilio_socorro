@@ -2,11 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kira.auxiliosocorro">
 
+    <!--agregando los pemisos necesarios -->
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" /><!--escribir almacenamiento interno-->
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" /><!--leer almacenamiento interno-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /><!--saber si esta conectado a internet o datos-->
+    <uses-permission android:name="android.permission.INTERNET" /><!--conectarse a internet-->
+    <uses-permission android:name="android.permission.VIBRATE" /><!--vibracion del dispositivo-->
+    <uses-permission android:name="android.permission.SEND_SMS"/><!--enviar mensajes-->
+
+    <uses-permission android:name="android.permission.WRITE_SMS"/><!--escribir mensajes-->
+    <uses-permission android:name="android.permission.READ_SMS"/><!--leer mensajes-->
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/><!--recibir mensajes-->
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/auxilio"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/auxilio"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">

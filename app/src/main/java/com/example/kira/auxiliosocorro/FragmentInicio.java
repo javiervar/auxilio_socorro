@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 
 /**
@@ -77,6 +78,8 @@ public class FragmentInicio extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
+                if(!isLocationEnabled(view.getContext()))
+                    return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
                     Toast.makeText(getContext(),"es android 6",Toast.LENGTH_SHORT).show();
                     // versiones con android 6.0 o superior
@@ -87,7 +90,7 @@ public class FragmentInicio extends Fragment {
                     int permissionCheck2 = ContextCompat.checkSelfPermission(
                             getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-                    if(permissionCheck!= PackageManager.PERMISSION_GRANTED || permissionCheck2!= PackageManager.PERMISSION_GRANTED){
+                    if(permissionCheck!= PackageManager.PERMISSION_GRANTED || permissionCheck2!= PackageManager.PERMISSION_GRANTED||!isLocationEnabled(view.getContext())){
                             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 225);
                             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 225);
 
@@ -212,6 +215,11 @@ public class FragmentInicio extends Fragment {
 
     public void setLista(JsonObject result){
         jsonLugares=result;
+    }
+    private boolean isLocationEnabled(Context context) {
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
     public void getUbicaciones(Context context){
 

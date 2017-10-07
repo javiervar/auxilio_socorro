@@ -138,8 +138,7 @@ double longitud = location.getLongitude();
                     //enviar mensaje de prueba
                     String strPhone = "6641375618";
                     //String strPhone = "6641184394";
-                    String strMessage = "Auxilio estoy en problemas, mi direccion es>: \\r\\n\\r\\n"+direccion+
-                            "mi ubicacion es: ";
+                    String strMessage = "";
 
                     //intento uno este no nos sirve XD aun
                     /*Intent sendIntent = new Intent(Intent.ACTION_VIEW);
@@ -162,6 +161,12 @@ double longitud = location.getLongitude();
                             //antes de mandar mensaje obtenemos la posicion
                             obtenPosicion();//seteamos posicion
                             mandaPosicion();//mandamos posicion
+                            setLocation(location);//obtener direccion
+
+
+                            strMessage = "Auxilio estoy en problemas, mi direccion es>: \r\n\r\n"+direccion+
+                                    "mi ubicacion es: ";
+
 
                             //mandamos mensaje a contactos
                             checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores

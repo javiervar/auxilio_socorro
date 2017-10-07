@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             setLocation(location);//obtener direccion
 
 
-                            strMessage = "Auxilio estoy en problemas, mi direccion es>: \r\n\r\n"+direccion+
+                            strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
                                     "mi ubicacion es: ";
 
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             setLocation(location);//obtener direccion
 
 
-                            strMessage = "Auxilio estoy en problemas, mi direccion es>: \r\n\r\n"+direccion+
+                            strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
                                     "mi ubicacion es: ";
 
 

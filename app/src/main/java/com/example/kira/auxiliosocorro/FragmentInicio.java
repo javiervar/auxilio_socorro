@@ -100,7 +100,7 @@ public class FragmentInicio extends Fragment {
                 if(!isLocationEnabled(view.getContext()))
                     return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
-                    Toast.makeText(getContext(),"es android 6",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(),"es android 6",Toast.LENGTH_SHORT).show();
                     // versiones con android 6.0 o superior
                    /* if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {*/
@@ -116,7 +116,7 @@ public class FragmentInicio extends Fragment {
 
                     } else {
                     // Show rationale and request permission.
-                        Toast.makeText(getContext(),"si obtuve permiso",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(),"si obtuve permiso",Toast.LENGTH_SHORT).show();
                         //mMap.setMyLocationEnabled(true);
 
                         googleMap.setMyLocationEnabled(true);

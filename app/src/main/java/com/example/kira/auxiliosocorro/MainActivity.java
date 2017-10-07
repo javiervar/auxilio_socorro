@@ -275,10 +275,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     //mandar mensajes
     public void mandaMensajes(Context context){
         Log.i("Mensaje", "Mandare SMS.");
-        /*JsonObject json = new JsonObject();
-        json.addProperty("api", "0ct0d3v5");
-        json.addProperty("operacion", "4");
-        json.addProperty("idUsuario", "1");*/
 
         Ion.with(context)
                 .load("https://auxiliosocorro.octodevs.com/Consultas")

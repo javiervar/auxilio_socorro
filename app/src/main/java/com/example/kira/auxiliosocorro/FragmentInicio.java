@@ -2,7 +2,11 @@ package com.example.kira.auxiliosocorro;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -12,10 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.androidnetworking.interfaces.ParsedRequestListener;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -25,6 +26,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 
 import org.apache.http.params.HttpConnectionParams;
@@ -35,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 
 /**
@@ -44,7 +50,10 @@ import java.util.Map;
 public class FragmentInicio extends Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
-
+    private LocationManager locationManager;
+    private Location location;
+    private Criteria criteria = new Criteria();
+    JsonObject jsonLugares=new JsonObject();
     public static FragmentInicio newInstance() {
         return new FragmentInicio();
     }
@@ -54,7 +63,7 @@ public class FragmentInicio extends Fragment {
         final View view = inflater.inflate(R.layout.fragmento_inicio, container, false);
         mMapView = (MapView) view.findViewById(R.id.soyelmapa);
         mMapView.onCreate(savedInstanceState);
-        getUbicaciones();
+        getUbicaciones(view.getContext());
         mMapView.onResume(); // needed to get the map to display immediately
 
         try {
@@ -69,6 +78,8 @@ public class FragmentInicio extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
+                if(!isLocationEnabled(view.getContext()))
+                    return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
                     Toast.makeText(getContext(),"es android 6",Toast.LENGTH_SHORT).show();
                     // versiones con android 6.0 o superior
@@ -79,7 +90,7 @@ public class FragmentInicio extends Fragment {
                     int permissionCheck2 = ContextCompat.checkSelfPermission(
                             getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-                    if(permissionCheck!= PackageManager.PERMISSION_GRANTED || permissionCheck2!= PackageManager.PERMISSION_GRANTED){
+                    if(permissionCheck!= PackageManager.PERMISSION_GRANTED || permissionCheck2!= PackageManager.PERMISSION_GRANTED||!isLocationEnabled(view.getContext())){
                             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 225);
                             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 225);
 
@@ -91,13 +102,45 @@ public class FragmentInicio extends Fragment {
 
                         googleMap.setMyLocationEnabled(true);
 
-                        // For dropping a marker at a point on the Map
-                        LatLng sydney = new LatLng(-34, 151);
-                        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+                        Ion.with(view.getContext())
+                                .load("https://auxiliosocorro.octodevs.com/Consultas")
+                                .setBodyParameter("api", "0ct0d3v5")
+                                .setBodyParameter("operacion", "2")
+                                .setBodyParameter("tipoLugar", "2")
+                                .asJsonObject()
+                                .setCallback(new FutureCallback<JsonObject>() {
+                                    @Override
+                                    public void onCompleted(Exception e, JsonObject result) {
+                                        setLista(result);
+                                        JsonArray jsonArray = result.getAsJsonArray("listaLugares");
+
+                                        for (int i = 0; i < jsonArray.size(); i++) {
+                                            JsonObject object = jsonArray.get(i).getAsJsonObject();
+                                            String lat = object.get("latitud").getAsString();
+                                            String lon=object.get("longitud").getAsString();
+                                            String nombre=object.get("per_razon_social").getAsString();
+                                            System.out.println(nombre);
+                                            LatLng lugar = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+                                            googleMap.addMarker(new MarkerOptions().position(lugar).title(nombre).snippet("Marker Description"));
+
+                                        }
+                                        // do stuff with the result or error
+                                    }
+                                });
+
+                        try{
+
+                            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                           LatLng  ubicacion = new LatLng(location.getLatitude(), location.getLongitude());
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(ubicacion).zoom(12).build();
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }catch (SecurityException e){
+                            System.out.println(e);
+                        }
 
                         // For zooming automatically to the location of the marker
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
                         }
 
@@ -107,13 +150,46 @@ public class FragmentInicio extends Fragment {
 
                     googleMap.setMyLocationEnabled(true);
 
-                    // For dropping a marker at a point on the Map
-                    LatLng sydney = new LatLng(-34, 151);
-                    googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+
+                    Ion.with(view.getContext())
+                            .load("https://auxiliosocorro.octodevs.com/Consultas")
+                            .setBodyParameter("api", "0ct0d3v5")
+                            .setBodyParameter("operacion", "2")
+                            .setBodyParameter("tipoLugar", "2")
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    setLista(result);
+                                    JsonArray jsonArray = result.getAsJsonArray("listaLugares");
+
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+                                        JsonObject object = jsonArray.get(i).getAsJsonObject();
+                                        String lat = object.get("latitud").getAsString();
+                                        String lon=object.get("longitud").getAsString();
+                                        String nombre=object.get("per_razon_social").getAsString();
+                                        System.out.println(nombre);
+                                        LatLng lugar = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+                                        googleMap.addMarker(new MarkerOptions().position(lugar).title(nombre).snippet("Marker Description"));
+
+                                    }
+                                    // do stuff with the result or error
+                                }
+                            });
+
+                    try{
+
+                        location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                        LatLng ubicacion = new LatLng(location.getLatitude(), location.getLongitude());
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(ubicacion).zoom(12).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }catch (SecurityException e){
+
+                    }
 
                     // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                 }
 
 
@@ -137,30 +213,38 @@ public class FragmentInicio extends Fragment {
         return view;
     }
 
-    public List<Ubicacion> getUbicaciones(){
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("api", "0ct0d3v5");
-        map.put("operacion", "2");
-        map.put("tipoLugar", "2");
-        List<Ubicacion> ubicacions=new ArrayList<Ubicacion>();
-        AndroidNetworking.get("https://auxiliosocorro.octodevs.com/Consultas")
-                .addPathParameter(map)
-                .addQueryParameter(map)
-                .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+    public void setLista(JsonObject result){
+        jsonLugares=result;
+    }
+    private boolean isLocationEnabled(Context context) {
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+    public void getUbicaciones(Context context){
+
+
+        JsonObject json = new JsonObject();
+        json.addProperty("api", "0ct0d3v5");
+        json.addProperty("operacion", "2");
+        json.addProperty("tipoLugar", "2");
+
+        Ion.with(context)
+                .load("https://auxiliosocorro.octodevs.com/Consultas")
+                .setBodyParameter("api", "0ct0d3v5")
+                .setBodyParameter("operacion", "2")
+                .setBodyParameter("tipoLugar", "2")
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        // do anything with response
-                        System.out.println("--------------------------------");
-                        System.out.println(response+"");
-                    }
-                    @Override
-                    public void onError(ANError error) {
-                        // handle error
+                    public void onCompleted(Exception e, JsonObject result) {
+                        setLista(result);
+
+                        // do stuff with the result or error
                     }
                 });
 
-        return ubicacions;
+
     }
 
 

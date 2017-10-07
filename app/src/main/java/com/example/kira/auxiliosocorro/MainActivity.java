@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnAlarma.setBackgroundColor(Color.TRANSPARENT);
                     //loadFragment(new FragmentAcopio());
-                    Toast.makeText(getBaseContext(), "SOCORRO!!! YA VALIO ESTO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "SOCORRO!!!", Toast.LENGTH_SHORT).show();
                     //enviar mensaje de prueba
                     String strPhone = "6641375618";
                     //String strPhone = "6641184394";

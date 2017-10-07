@@ -13,6 +13,7 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +37,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+import static com.example.kira.auxiliosocorro.R.id.editText;
+
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
     private static final long RIPPLE_DURATION = 250;
 
     private Toolbar toolbar;
@@ -50,22 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private Location location;
     private String latitud="ERROR",longitud="ERROR",direccion="ERROR";
     private Criteria criteria = new Criteria();
-
-    /*
-
-    LocationManager locationManager = (LocationManager)
-        getSystemService(Context.LOCATION_SERVICE);
-Criteria criteria = new Criteria();
-
-Location location = locationManager.getLastKnownLocation(locationManager
-        .getBestProvider(criteria, false));
-double latitude = location.getLatitude();
-double longitud = location.getLongitude();
-
-     */
+    private TextToSpeech textToSpeech;//pasar texto a voz
+    private boolean sigue=true;//saber si seguir con la alarma
 
 
-    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro;
+    private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnAlarma;
     private GuillotineAnimation g;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +91,8 @@ double longitud = location.getLongitude();
         //agregando boton prueba mensaje socorro
         btnSocorro=g.getBtnSocorro();
         btnSocorro.setOnClickListener(eventosMenu);
+        btnAlarma=g.getBtnAlarma();
+        btnAlarma.setOnClickListener(eventosMenu);
 
     }
 
@@ -111,6 +105,7 @@ double longitud = location.getLongitude();
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAlarma.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentInicio());
                     break;
                 case R.id.btn_refugio:
@@ -118,6 +113,7 @@ double longitud = location.getLongitude();
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAlarma.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentRefugio());
                     break;
                 case R.id.btn_acopio:
@@ -125,6 +121,7 @@ double longitud = location.getLongitude();
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
                     btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAlarma.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentAcopio());
                     break;
                 case R.id.btn_socorro://mandar mensaje de axilio
@@ -133,20 +130,13 @@ double longitud = location.getLongitude();
                     btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnAlarma.setBackgroundColor(Color.TRANSPARENT);
                     //loadFragment(new FragmentAcopio());
                     Toast.makeText(getBaseContext(), "SOCORRO!!! YA VALIO ESTO", Toast.LENGTH_SHORT).show();
                     //enviar mensaje de prueba
                     String strPhone = "6641375618";
                     //String strPhone = "6641184394";
-                    String strMessage = "Auxilio estoy en problemas, mi direccion es>: \\r\\n\\r\\n"+direccion+
-                            "mi ubicacion es: ";
-
-                    //intento uno este no nos sirve XD aun
-                    /*Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-                    sendIntent.setType("vnd.android-dir/mms-sms");
-                    sendIntent.putExtra("address", strPhone);
-                    sendIntent.putExtra("sms_body", strMessage);
-                    startActivity(sendIntent);*/
+                    String strMessage = "";
 
                     //intento 2
                     //obtener la posicion de la persona
@@ -162,6 +152,12 @@ double longitud = location.getLongitude();
                             //antes de mandar mensaje obtenemos la posicion
                             obtenPosicion();//seteamos posicion
                             mandaPosicion();//mandamos posicion
+                            setLocation(location);//obtener direccion
+
+
+                            strMessage = "Auxilio estoy en problemas, mi direccion es>: \r\n\r\n"+direccion+
+                                    "mi ubicacion es: ";
+
 
                             //mandamos mensaje a contactos
                             checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
@@ -184,7 +180,7 @@ double longitud = location.getLongitude();
                             //mandamos mensaje
                             SmsManager sms = SmsManager.getDefault();
 
-                            sms.sendTextMessage(strPhone, null, strMessage+longitud+","+latitud, null, null);
+                            sms.sendTextMessage(strPhone, null, strMessage+latitud+","+longitud, null, null);
 
                         }
 
@@ -193,13 +189,26 @@ double longitud = location.getLongitude();
                         Toast.makeText(getBaseContext(),"GPS desactivado",Toast.LENGTH_SHORT).show();
                     }
 
-                    /*GoogleApiClient apiClient = new GoogleApiClient.Builder(this)
-                            .enableAutoManage(this, this)
-                            .addConnectionCallbacks(this)
-                            .addApi(Location.API)
-                            .build();*/
 
-                    //Toast.makeText(this, "Sent.", Toast.LENGTH_SHORT).show();
+
+                    break;
+
+                case R.id.btn_alarma:
+                    textToSpeech = new TextToSpeech(getApplicationContext(),new TextToSpeech.OnInitListener(){
+                        @Override
+                        public void onInit(int status) {
+                            habla();
+                        }
+                    });
+                    btnAcopio.setBackgroundColor(Color.TRANSPARENT);
+                    btnRefugio.setBackgroundColor(Color.TRANSPARENT);
+                    btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnSocorro.setBackgroundColor(Color.TRANSPARENT);
+                    btnAlarma.setBackgroundColor(Color.TRANSPARENT);
+
+                    //loadFragment(new FragmentAcopio());
+
+
 
                     break;
             }
@@ -228,14 +237,6 @@ double longitud = location.getLongitude();
 
             latitud =location.getLatitude()+"";
             longitud = location.getLongitude()+"";
-            /*if(location.getLatitude()+""!=null){
-                latitud =location.getLatitude()+"";
-            }
-            if(location.getLongitude()+""!=null){
-                longitud = location.getLongitude()+"";
-            }*/
-
-
 
         }catch (SecurityException e){
 
@@ -278,6 +279,23 @@ double longitud = location.getLongitude();
     }
 
 
+    //pasartexto a voz
+    private void habla(){
+        textToSpeech.setLanguage( new Locale( "spa", "ESP" ) );
+        String auxilio="AUXILIO";
+        speak(auxilio);
+
+
+    }
+
+    private void speak( String str )
+    {
+        textToSpeech.speak( str, TextToSpeech.QUEUE_FLUSH, null );
+        textToSpeech.setSpeechRate( 0.0f );
+        textToSpeech.setPitch( 0.0f );
+    }
+
+
 
     public void loadFragment(Fragment fragment) {
 
@@ -285,6 +303,17 @@ double longitud = location.getLongitude();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.details_fragment, fragment);
         fragmentTransaction.commit(); // save the changes
+    }
+
+
+
+    @Override
+    public void onInit( int status )
+    {
+        if ( status == TextToSpeech.LANG_MISSING_DATA | status == TextToSpeech.LANG_NOT_SUPPORTED )
+        {
+            Toast.makeText( this, "ERROR LANG_MISSING_DATA | LANG_NOT_SUPPORTED", Toast.LENGTH_SHORT ).show();
+        }
     }
 
 

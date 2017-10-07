@@ -64,7 +64,19 @@ public class FragmentInicio extends Fragment {
     }
 
 
+
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+        /*ImageView elBoton=(ImageView)getView().findViewById(R.id.elBoton);
+        elBoton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"es android 6",Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+
         final View view = inflater.inflate(R.layout.fragmento_inicio, container, false);
         mMapView = (MapView) view.findViewById(R.id.soyelmapa);
         mMapView.onCreate(savedInstanceState);
@@ -76,6 +88,8 @@ public class FragmentInicio extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
@@ -146,11 +160,11 @@ public class FragmentInicio extends Fragment {
                                 });
 
                         try{
-
-                            /*location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                            //para android 6 comentar todo lo de abajo
+                            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
                             LatLng  ubicacion = new LatLng(location.getLatitude(), location.getLongitude());
                             CameraPosition cameraPosition = new CameraPosition.Builder().target(ubicacion).zoom(12).build();
-                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         }catch (SecurityException e){
                             System.out.println(e);
                         }
@@ -241,6 +255,12 @@ public class FragmentInicio extends Fragment {
         return view;
     }
 
+    public void mandaMensajes(){
+        Toast.makeText(getActivity(),"presionado",Toast.LENGTH_SHORT).show();
+
+    }
+
+
     public void setLista(JsonObject result){
         jsonLugares=result;
     }
@@ -275,24 +295,6 @@ public class FragmentInicio extends Fragment {
 
     }
 
-
-
-   /* public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setContentView(R.layout.fragmento_inicio);
-        ImageView boton=(ImageView) getView().findViewById(R.id.elBoton);
-
-        boton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                //v.getId() will give you the image id
-                Toast.makeText(getActivity(),"presionado",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    };*/
 
 
 

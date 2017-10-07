@@ -23,6 +23,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -32,6 +33,14 @@ import android.location.LocationManager;
 
 import com.example.kira.auxiliosocorro.Gillotine.animation.GuillotineAnimation;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,18 +57,20 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private View contentHamburger;
 
+    JsonObject jsonLugares=new JsonObject();
+
     //pruebas de localizacion
     private LocationManager locationManager;
     private Location location;
     private String latitud="ERROR",longitud="ERROR",direccion="ERROR";
     private Criteria criteria = new Criteria();
     private TextToSpeech textToSpeech;//pasar texto a voz
-    private boolean sigue=true;//saber si seguir con la alarma
+    private boolean sigue=false;//saber si seguir con la alarma
 
 
     private Button btnInicio,btnRefugio, btnAcopio,btnSocorro,btnAlarma;
     private GuillotineAnimation g;
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -153,9 +164,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             obtenPosicion();//seteamos posicion
                             mandaPosicion();//mandamos posicion
                             setLocation(location);//obtener direccion
+                            checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
+                            mandaMensajes(getBaseContext());
 
-
-                            strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
+                            /*strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
                                     "mi ubicacion es: ";
 
 
@@ -163,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             checkSMSStatePermission();//pedimos permiso para la versiones de 6 o mayores
                             SmsManager sms = SmsManager.getDefault();
 
-                            sms.sendTextMessage(strPhone, null, strMessage, null, null);
+                            sms.sendTextMessage(strPhone, null, strMessage, null, null);*/
 
 
                         } else{
@@ -178,16 +190,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             //obtenPosicion();//seteamos posicion
                             mandaPosicion();//mandamos posicion
                             setLocation(location);//obtener direccion
+                            mandaMensajes(getBaseContext());
 
-
-                            strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
+                           /* strMessage = "Auxilio estoy en Peligro, mi direccion es>: \r\n\r\n"+direccion+
                                     "mi ubicacion es: ";
 
 
                             //mandamos mensaje
+
                             SmsManager sms = SmsManager.getDefault();
 
-                            sms.sendTextMessage(strPhone, null, strMessage+latitud+","+longitud, null, null);
+                            sms.sendTextMessage(strPhone, null, strMessage+latitud+","+longitud, null, null);*/
 
                         }
 
@@ -259,6 +272,66 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     }
 
+    //mandar mensajes
+    public void mandaMensajes(Context context){
+        Log.i("Mensaje", "Mandare SMS.");
+        /*JsonObject json = new JsonObject();
+        json.addProperty("api", "0ct0d3v5");
+        json.addProperty("operacion", "4");
+        json.addProperty("idUsuario", "1");*/
+
+        Ion.with(context)
+                .load("https://auxiliosocorro.octodevs.com/Consultas")
+                .setBodyParameter("api", "0ct0d3v5")
+                .setBodyParameter("operacion", "4")
+                .setBodyParameter("usuarioId", "1")
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        setLista(result);
+                        Log.i("JSON", result+"");
+                        JsonArray listaContactos = result.getAsJsonArray("listaContactos");
+                        Log.i("ListaContactos", listaContactos+"");
+                        // do stuff with the result or error
+                        JsonArray jsonArray = result.getAsJsonArray("listaContactos");
+                        Log.i("jsonArray", jsonArray+"");
+
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject object = jsonArray.get(i).getAsJsonObject();
+                            int tipoContacto=object.get("tipoContacto").getAsInt();
+                            String Mensaje = object.get("mensaje").getAsString()+"estoy en : "+direccion+
+                                    "y mi localizacion es: "+latitud+","+longitud;
+                            String telefono=object.get("telefono").getAsString();
+
+                            /*if (tipoContacto==1){
+                                bitmapDescriptor
+                                        = BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_RED);
+                            }else{
+                                bitmapDescriptor
+                                        = BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_RED);
+                            }*/
+                            //mandamos mensaje a contactos
+
+                            SmsManager sms = SmsManager.getDefault();
+
+                            sms.sendTextMessage(telefono, null,Mensaje, null, null);
+
+
+                        }
+
+
+                    }
+                });
+    }
+
+
+    public void setLista(JsonObject result){
+        jsonLugares=result;
+    }
+
     //obten direccion
     public void setLocation(Location loc) {
         //Obtener la direcci—n de la calle a partir de la latitud y la longitud
@@ -290,7 +363,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private void habla(){
         textToSpeech.setLanguage( new Locale( "spa", "ESP" ) );
         String auxilio="AUXILIO SOCORRO";
+
         speak(auxilio);
+
 
 
     }

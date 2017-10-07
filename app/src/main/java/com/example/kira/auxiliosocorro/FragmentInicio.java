@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -41,6 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Inflater;
+
+//import static com.example.kira.auxiliosocorro.R.id.imageView;
 
 
 /**
@@ -131,10 +134,10 @@ public class FragmentInicio extends Fragment {
 
                         try{
 
-                            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-                           LatLng  ubicacion = new LatLng(location.getLatitude(), location.getLongitude());
+                            /*location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                            LatLng  ubicacion = new LatLng(location.getLatitude(), location.getLongitude());
                             CameraPosition cameraPosition = new CameraPosition.Builder().target(ubicacion).zoom(12).build();
-                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
                         }catch (SecurityException e){
                             System.out.println(e);
                         }
@@ -246,6 +249,25 @@ public class FragmentInicio extends Fragment {
 
 
     }
+
+
+
+   /* public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.fragmento_inicio);
+        ImageView boton=(ImageView) getView().findViewById(R.id.elBoton);
+
+        boton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //v.getId() will give you the image id
+                Toast.makeText(getActivity(),"presionado",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    };*/
 
 
 

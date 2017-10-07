@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             Toast.makeText(getBaseContext(),longitud,Toast.LENGTH_SHORT).show();
 
                             //antes de mandar mensaje obtenemos la posicion
-                            obtenPosicion();//seteamos posicion
+                            //obtenPosicion();//seteamos posicion
                             mandaPosicion();//mandamos posicion
                             setLocation(location);//obtener direccion
 
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     //pasartexto a voz
     private void habla(){
         textToSpeech.setLanguage( new Locale( "spa", "ESP" ) );
-        String auxilio="AUXILIO";
+        String auxilio="AUXILIO SOCORRO";
         speak(auxilio);
 
 

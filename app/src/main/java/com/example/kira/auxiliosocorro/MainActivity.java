@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private View contentHamburger;
 
 
-    private Button btnInicio,btnRefugio;
+    private Button btnInicio,btnRefugio, btnAcopio;
     private GuillotineAnimation g;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
                 .setActionBarViewForAnimation(toolbar)
                 .setClosedOnStart(true)
                 .build();
+
         btnInicio =g.getBtnInicio();
         btnRefugio=g.getBtnRefugio();
+        btnAcopio=g.getBtnAcopio();
         btnInicio.setOnClickListener(eventosMenu);
         btnRefugio.setOnClickListener(eventosMenu);
+        btnAcopio.setOnClickListener(eventosMenu);
 
     }
 
@@ -62,12 +65,20 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_inicio:
                     btnInicio.setBackgroundResource(R.drawable.ripple);
                     btnRefugio.setBackgroundColor(Color.TRANSPARENT);
+                    btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentInicio());
                     break;
                 case R.id.btn_refugio:
                     btnRefugio.setBackgroundResource(R.drawable.ripple);
                     btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    btnAcopio.setBackgroundColor(Color.TRANSPARENT);
                     loadFragment(new FragmentRefugio());
+                    break;
+                case R.id.btn_acopio:
+                    btnAcopio.setBackgroundResource(R.drawable.ripple);
+                    btnRefugio.setBackgroundColor(Color.TRANSPARENT);
+                    btnInicio.setBackgroundColor(Color.TRANSPARENT);
+                    loadFragment(new FragmentAcopio());
                     break;
             }
             g.close();

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -29,7 +31,9 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -122,23 +126,25 @@ public class FragmentInicio extends Fragment {
     }
 
     public List<Ubicacion> getUbicaciones(){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("api", "0ct0d3v5");
+        map.put("operacion", "2");
+        map.put("tipoLugar", "2");
         List<Ubicacion> ubicacions=new ArrayList<Ubicacion>();
         AndroidNetworking.get("https://auxiliosocorro.octodevs.com/Consultas")
-                .addPathParameter("api", "0ct0d3v5")
-                .addQueryParameter("operacion", "2")
-                .addQueryParameter("tipoLugar", "2")
-                .addHeaders("token", "1234")
-                .setTag("test")
+                .addPathParameter(map)
+                .addQueryParameter(map)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        System.out.println(response);
+                        // do anything with response
+                        System.out.println("--------------------------------");
+                        System.out.println(response+"");
                     }
                     @Override
                     public void onError(ANError error) {
                         // handle error
-                        System.out.println(error);
                     }
                 });
 
